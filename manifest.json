@@ -1,0 +1,19 @@
+{
+  "name": "Microrx DevTools",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "description": "A signal-based state reviewer for microrx",
+  "devtools_page": "devtools.html",
+  "permissions": ["scripting", "activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ]
+}
