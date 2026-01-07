@@ -1,63 +1,156 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <style>
-        body { margin: 0; padding: 0; background-color: #fff; user-select: none; }
-        
-        /* Fixed Header */
-        .header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 12px; background: #f3f3f3; border-bottom: 1px solid #ccc;
-            position: sticky; top: 0; z-index: 100;
-        }
+  <meta charset="UTF-8">
+  <style>
+  :root {
+    --sys-color-base: #ffffff;
+    --sys-color-sidebar: #f3f3f3;
+    --sys-color-divider: #d0d0d0;
+    --sys-color-selection: #1a73e8;
+    --sys-color-hover: #e8f0fe;
+    --font-family: 'Segoe UI', Tahoma, sans-serif;
+    --font-size: 11px; /* Standard DevTools size */
+  }
 
-        .status-info { display: flex; align-items: center; font-size: 11px; color: #666; font-family: sans-serif; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; margin-right: 8px; }
-        .dot.connected { background: #2ecc71; box-shadow: 0 0 5px #2ecc71; }
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    overflow: hidden;
+    color: #333;
+  }
 
-        /* Tree Styles */
-        .tree-container { font-family: 'Segoe UI', 'Consolas', monospace; padding: 10px; font-size: 12px; color: #333; }
-        
-        .tree-level { 
-            margin-left: 10px; 
-            padding-left: 10px;
-            border-left: 1px solid #ddd; /* Vertical tracking line */
-            display: block; 
-        }
+  .container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+  }
 
-        .collapsed { display: none !important; }
+  /* --- LEFT SIDEBAR --- */
+  .sidebar {
+    width: 220px;
+    min-width: 150px;
+    background-color: var(--sys-color-sidebar);
+    border-right: 1px solid var(--sys-color-divider);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
 
-        .tree-row { display: flex; align-items: center; padding: 2px 8px; border-radius: 4px; position: relative; white-space: nowrap; }
-        .tree-row:hover { background-color: #f0f7ff; }
+  .sidebar-header {
+    padding: 8px 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #5a5a5a;
+    letter-spacing: 0.5px;
+    font-size: 10px;
+  }
 
-        /* Fold Toggle Arrow */
-        .toggle {
-            cursor: pointer; width: 14px; height: 14px;
-            display: inline-flex; align-items: center; justify-content: center;
-            margin-right: 4px; color: #666; transition: transform 0.2s;
-        }
-        .toggle.rotated { transform: rotate(-90deg); }
+  .nav-group { margin-bottom: 10px; }
 
-        .key { color: #881391; font-weight: bold; margin-right: 5px; }
-        .value { color: #1a1aa6; }
+  .nav-item {
+    padding: 4px 10px 4px 24px;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
 
-        /* UI Buttons */
-        .btn { cursor: pointer; font-size: 10px; padding: 2px 8px; border: 1px solid #ccc; background: #fff; border-radius: 3px; }
-        .btn:hover { background: #e2e2e2; }
-    </style>
+  .nav-item.parent {
+    padding-left: 10px;
+    font-weight: bold;
+    color: #444;
+  }
+
+  .nav-item:hover { background-color: var(--sys-color-hover); }
+
+  .nav-item.active {
+    background-color: #d9ecff;
+    color: #1a73e8;
+  }
+
+  /* --- MAIN CONTENT AREA --- */
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--sys-color-base);
+  }
+
+  .toolbar {
+    height: 26px;
+    background-color: var(--sys-color-sidebar);
+    border-bottom: 1px solid var(--sys-color-divider);
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    gap: 5px;
+  }
+
+  .content-body {
+    flex: 1;
+    overflow: auto;
+    padding: 10px;
+  }
+
+  /* --- TREE STYLES (Your Original Logic) --- */
+  .tree-level { 
+    margin-left: 12px; padding-left: 10px;
+    border-left: 1px solid #eee;
+  }
+  .tree-row { display: flex; align-items: center; padding: 1px 4px; border-radius: 2px; }
+  .tree-row:hover { background-color: #f0f7ff; }
+  .key { color: #881391; font-weight: bold; margin-right: 5px; }
+  .value { color: #1a1aa6; }
+  .toggle { cursor: pointer; width: 12px; color: #666; font-size: 9px; }
+  .collapsed { display: none !important; }
+  .rotated { transform: rotate(-90deg); display: inline-block; }
+
+  /* Status Dot */
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; margin-right: 5px; }
+  .dot.connected { background: #2ecc71; }
+  
+  button.icon-btn {
+    background: none; border: none; cursor: pointer; color: #5a5a5a;
+    padding: 2px 5px; border-radius: 2px; font-size: 10px;
+  }
+  button.icon-btn:hover { background: #d0d0d0; }
+  </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="status-info">
-        <div id="status-dot" class="dot"></div>
-        <span id="status-text">Detecting Framework...</span>
+<div class="container">
+  <div class="sidebar">
+    <div class="nav-group">
+      <div class="nav-item parent">State</div>
+      <div class="nav-item active" data-view="reactive-state">Reactive State Object</div>
+      <div class="nav-item" data-view="subscribers">Subscribers</div>
     </div>
-    <button id="refreshBtn" class="btn">Manual Refresh</button>
-</div>
+    <div class="nav-group">
+      <div class="nav-item parent">Verify</div>
+      <div class="nav-item" data-view="time-travel">Time-travel</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-item parent">Functions</div>
+      <div class="nav-item" data-view="pipelined">Pipelined Functions</div>
+    </div>
+    </div>
 
-<div id="editor" class="tree-container"></div>
+    <div class="main-content">
+    <div class="toolbar">
+      <div id="status-dot" class="dot"></div>
+      <span id="status-text" style="color: #666; margin-right: 10px;">Connecting...</span>
+      <button id="refreshBtn" class="icon-btn">↻ Refresh</button>
+    </div>
+    
+    <div id="editor" class="content-body"></div>
+
+    <div id="other-views" class="content-body" style="display:none; color: #999; text-align: center; margin-top: 50px;">
+      This feature is coming soon...
+    </div>
+  </div>
+</div>
 
 <script type="module" src="panel.js"></script>
 </body>

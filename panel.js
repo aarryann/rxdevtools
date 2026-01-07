@@ -16,15 +16,15 @@ const backgroundConnection = chrome.runtime.connect({ name: "devtools-panel" });
 
 // Initialize connection with tabId so background knows where to relay messages
 backgroundConnection.postMessage({
-    name: 'init',
-    tabId: tabId
+  name: 'init',
+  tabId: tabId
 });
 
 // Listen for STATE_UPDATED messages relayed from the Content Script via Background
 backgroundConnection.onMessage.addListener((message) => {
-    if (message.type === 'STATE_UPDATED') {
-        updateUI(message.payload);
-    }
+  if (message.type === 'STATE_UPDATED') {
+    updateUI(message.payload);
+  }
 });
 
 /**
@@ -32,76 +32,76 @@ backgroundConnection.onMessage.addListener((message) => {
  * Pulls window.state from the inspected page context
  */
 function fetchInitialState() {
-    // We stringify it in the page context because we can't pass Proxies over the wire
-    chrome.devtools.inspectedWindow.eval("JSON.stringify(window.state)", (result, isException) => {
-        if (!isException && result) {
-            updateUI(JSON.parse(result));
-        } else if (isException) {
-            console.error("Eval failed:", isException);
-            statusText.textContent = "Error: state not found";
-        }
-    });
+  // We stringify it in the page context because we can't pass Proxies over the wire
+  chrome.devtools.inspectedWindow.eval("JSON.stringify(window.state)", (result, isException) => {
+    if (!isException && result) {
+      updateUI(JSON.parse(result));
+    } else if (isException) {
+      console.error("Eval failed:", isException);
+      statusText.textContent = "Error: state not found";
+    }
+  });
 }
 
 function updateUI(data) {
-    jsonData = data;
-    isConnected = true;
-    dot.classList.add('connected');
-    statusText.textContent = "Live Feed Connected";
-    renderTree(jsonData, editor);
+  jsonData = data;
+  isConnected = true;
+  dot.classList.add('connected');
+  statusText.textContent = "Live Feed Connected";
+  renderTree(jsonData, editor);
 }
 
 /**
  * TREE RENDERING ENGINE
  */
 function renderTree(obj, container) {
-    container.innerHTML = '';
-    if (!obj) return;
+  container.innerHTML = '';
+  if (!obj) return;
 
-    for (let key in obj) {
-        const value = obj[key];
-        const row = document.createElement('div');
-        row.className = 'tree-row';
+  for (let key in obj) {
+    const value = obj[key];
+    const row = document.createElement('div');
+    row.className = 'tree-row';
 
-        const isCollapsible = typeof value === 'object' && value !== null;
-        
-        if (isCollapsible) {
-            const branchContainer = document.createElement('div');
-            branchContainer.className = 'tree-level';
-            
-            // Create the arrow toggle
-            const toggle = document.createElement('span');
-            toggle.className = 'toggle';
-            toggle.textContent = '▼';
-            toggle.onclick = () => {
-                toggle.classList.toggle('rotated');
-                branchContainer.classList.toggle('collapsed');
-            };
-            
-            row.appendChild(toggle);
-            row.appendChild(createSpan('key', Array.isArray(obj) ? `[${key}]:` : `${key}:`));
-            container.appendChild(row);
-            
-            renderTree(value, branchContainer);
-            container.appendChild(branchContainer);
-        } else {
-            // Leaf node (primitive value)
-            const spacer = document.createElement('span');
-            spacer.style.width = '18px'; 
-            row.appendChild(spacer);
-            
-            row.appendChild(createSpan('key', Array.isArray(obj) ? `[${key}]:` : `${key}:`));
-            row.appendChild(createSpan('value', `"${value}"`));
-            container.appendChild(row);
-        }
+    const isCollapsible = typeof value === 'object' && value !== null;
+    
+    if (isCollapsible) {
+      const branchContainer = document.createElement('div');
+      branchContainer.className = 'tree-level';
+      
+      // Create the arrow toggle
+      const toggle = document.createElement('span');
+      toggle.className = 'toggle';
+      toggle.textContent = '▼';
+      toggle.onclick = () => {
+        toggle.classList.toggle('rotated');
+        branchContainer.classList.toggle('collapsed');
+      };
+      
+      row.appendChild(toggle);
+      row.appendChild(createSpan('key', Array.isArray(obj) ? `[${key}]:` : `${key}:`));
+      container.appendChild(row);
+      
+      renderTree(value, branchContainer);
+      container.appendChild(branchContainer);
+    } else {
+      // Leaf node (primitive value)
+      const spacer = document.createElement('span');
+      spacer.style.width = '18px'; 
+      row.appendChild(spacer);
+      
+      row.appendChild(createSpan('key', Array.isArray(obj) ? `[${key}]:` : `${key}:`));
+      row.appendChild(createSpan('value', `"${value}"`));
+      container.appendChild(row);
     }
+  }
 }
 
 function createSpan(cls, text) {
-    const s = document.createElement('span');
-    s.className = cls;
-    s.textContent = text;
-    return s;
+  const s = document.createElement('span');
+  s.className = cls;
+  s.textContent = text;
+  return s;
 }
 
 // Event Listeners
