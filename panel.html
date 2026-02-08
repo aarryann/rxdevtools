@@ -2,121 +2,9 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <style>
-  :root {
-    --sys-color-base: #ffffff;
-    --sys-color-sidebar: #f3f3f3;
-    --sys-color-divider: #d0d0d0;
-    --sys-color-selection: #1a73e8;
-    --sys-color-hover: #e8f0fe;
-    --font-family: 'Segoe UI', Tahoma, sans-serif;
-    --font-size: 11px; /* Standard DevTools size */
-  }
-
-  body, html {
-    margin: 0; padding: 0; height: 100%;
-    font-family: var(--font-family);
-    font-size: var(--font-size);
-    overflow: hidden;
-    color: #333;
-  }
-
-  .container {
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-  }
-
-  /* --- LEFT SIDEBAR --- */
-  .sidebar {
-    width: 220px;
-    min-width: 150px;
-    background-color: var(--sys-color-sidebar);
-    border-right: 1px solid var(--sys-color-divider);
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-  }
-
-  .sidebar-header {
-    padding: 8px 10px;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #5a5a5a;
-    letter-spacing: 0.5px;
-    font-size: 10px;
-  }
-
-  .nav-group { margin-bottom: 10px; }
-
-  .nav-item {
-    padding: 4px 10px 4px 24px;
-    cursor: default;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-  }
-
-  .nav-item.parent {
-    padding-left: 10px;
-    font-weight: bold;
-    color: #444;
-  }
-
-  .nav-item:hover { background-color: var(--sys-color-hover); }
-
-  .nav-item.active {
-    background-color: #d9ecff;
-    color: #1a73e8;
-  }
-
-  /* --- MAIN CONTENT AREA --- */
-  .main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: var(--sys-color-base);
-  }
-
-  .toolbar {
-    height: 26px;
-    background-color: var(--sys-color-sidebar);
-    border-bottom: 1px solid var(--sys-color-divider);
-    display: flex;
-    align-items: center;
-    padding: 0 5px;
-    gap: 5px;
-  }
-
-  .content-body {
-    flex: 1;
-    overflow: auto;
-    padding: 10px;
-  }
-
-  /* --- TREE STYLES (Your Original Logic) --- */
-  .tree-level { 
-    margin-left: 12px; padding-left: 10px;
-    border-left: 1px solid #eee;
-  }
-  .tree-row { display: flex; align-items: center; padding: 1px 4px; border-radius: 2px; }
-  .tree-row:hover { background-color: #f0f7ff; }
-  .key { color: #881391; font-weight: bold; margin-right: 5px; }
-  .value { color: #1a1aa6; }
-  .toggle { cursor: pointer; width: 12px; color: #666; font-size: 9px; }
-  .collapsed { display: none !important; }
-  .rotated { transform: rotate(-90deg); display: inline-block; }
-
-  /* Status Dot */
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; margin-right: 5px; }
-  .dot.connected { background: #2ecc71; }
-  
-  button.icon-btn {
-    background: none; border: none; cursor: pointer; color: #5a5a5a;
-    padding: 2px 5px; border-radius: 2px; font-size: 10px;
-  }
-  button.icon-btn:hover { background: #d0d0d0; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RxViewer - Signal Inspector</title>
+  <link rel="stylesheet" href="./panel.css">
 </head>
 <body>
 
@@ -142,7 +30,7 @@
       <div id="status-dot" class="dot"></div>
       <span id="status-text" style="color: #666; margin-right: 10px;">Connecting...</span>
       <button id="refreshBtn" class="icon-btn">↻ Refresh</button>
-      <button id="stateBtn" class="icon-btn">⌁ State</button>
+      <button id="collapseAllBtn" class="icon-btn">⌁ Collapse All</button>
     </div>
     
     <div id="editor" class="content-body"></div>

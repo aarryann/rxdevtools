@@ -1,0 +1,191 @@
+:root {
+  --sys-color-base: #ffffff;
+  --sys-color-sidebar: #f3f3f3;
+  --sys-color-divider: #d0d0d0;
+  --sys-color-selection: #1a73e8;
+  --sys-color-hover: #e8f0fe;
+  --font-family: 'Segoe UI', Tahoma, sans-serif;
+  --font-size: 11px; /* Standard DevTools size */
+}
+
+body, html {
+  margin: 0; padding: 0; height: 100%;
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  overflow: hidden;
+  color: #333;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.sidebar {
+  width: 220px;
+  min-width: 150px;
+  background-color: var(--sys-color-sidebar);
+  border-right: 1px solid var(--sys-color-divider);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 8px 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #5a5a5a;
+  letter-spacing: 0.5px;
+  font-size: 10px;
+}
+
+.nav-group { margin-bottom: 10px; }
+
+.nav-item {
+  padding: 4px 10px 4px 24px;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.nav-item.parent {
+  padding-left: 10px;
+  font-weight: bold;
+  color: #444;
+}
+
+.nav-item:hover { background-color: var(--sys-color-hover); }
+
+.nav-item.active {
+  background-color: #d9ecff;
+  color: #1a73e8;
+}
+
+.tree-container { font-family: 'Segoe UI', monospace; padding: 20px; font-size: 13px; color: #333; }
+
+/* Level tracking lines */
+.tree-level { 
+  margin-left: 10px; 
+  padding-left: 10px;
+  border-left: 1px solid #ddd; /* The vertical line */
+  display: block; 
+}
+
+/* Class to hide folded content */
+.collapsed { display: none !important; }
+
+.tree-row { display: flex; align-items: center; padding: 3px 8px; border-radius: 4px; position: relative; }
+.tree-row:hover { background-color: #f0f7ff; }
+
+/* Fold Toggle Arrow */
+.toggle {
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  color: #666;
+  transition: transform 0.2s;
+  user-select: none;
+}
+.toggle.rotated { transform: rotate(-90deg); }
+
+.rotated { transform: rotate(-90deg); display: inline-block; }
+
+.key { color: #881391; font-weight: bold; margin-right: 5px; }
+.value { color: #1a1aa6; }
+
+.controls { margin-left: 15px; display: flex; gap: 4px; opacity: 0; }
+.tree-row:hover .controls { opacity: 1; }
+
+.icon { cursor: pointer; font-size: 11px; padding: 1px 5px; border: 1px solid #ccc; background: #fff; border-radius: 3px; }
+.icon:hover { background: #e2e2e2; }
+.editable { background: white; border: 1px solid #007bff; outline: none; padding: 0 4px; }
+
+#status-bar {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  background: rgba(255,255,255,0.9);
+  padding: 4px 8px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  z-index: 100;
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #ff4d4d; transition: background 0.3s; }
+.dot.connected { background: #2ecc71; box-shadow: 0 0 5px #2ecc71; }  
+
+/* Toolbar Containers */
+.toolbar {
+  height: 28px;
+  background-color: var(--sys-color-sidebar);
+  border-bottom: 1px solid var(--sys-color-divider);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 5px;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 16px;
+  background-color: var(--sys-color-divider);
+  margin: 0 8px;
+}
+
+/* Button Styling */
+.toolbar-button {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  color: #5a5a5a;
+  font-size: 11px;
+  padding: 2px 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.1s;
+}
+
+.toolbar-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Power Mode Active State (DevTools Blue) */
+.toolbar-button.active {
+  color: #1a73e8;
+  background-color: #e8f0fe;
+}
+
+.toolbar-button.active .power-icon {
+  filter: drop-shadow(0 0 2px #1a73e8);
+}
+
+button.icon-btn {
+  background: none; border: none; cursor: pointer; color: #5a5a5a;
+  padding: 2px 5px; border-radius: 2px; font-size: 10px;
+}
+button.icon-btn:hover { background: #d0d0d0; }
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--sys-color-base);
+}
+
+.content-body {
+  flex: 1;
+  overflow: auto;
+  padding: 10px;
+}
