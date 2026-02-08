@@ -9,6 +9,7 @@ const editor = document.getElementById('editor');
 const dot = document.getElementById('status-dot');
 const statusText = document.getElementById('status-text');
 const refreshBtn = document.getElementById('refreshBtn');
+const stateBtn = document.getElementById('stateBtn');
 
 // 1. SETUP CONNECTION TO BACKGROUND RELAY
 const tabId = chrome.devtools.inspectedWindow.tabId;
@@ -33,9 +34,9 @@ backgroundConnection.onMessage.addListener((message) => {
  */
 function fetchInitialState() {
   // We stringify it in the page context because we can't pass Proxies over the wire
-  chrome.devtools.inspectedWindow.eval("JSON.stringify(window.state)", (result, isException) => {
+  chrome.devtools.inspectedWindow.eval("window.state", (result, isException) => {
     if (!isException && result) {
-      updateUI(JSON.parse(result));
+      updateUI(result);
     } else if (isException) {
       console.error("Eval failed:", isException);
       statusText.textContent = "Error: state not found";
@@ -106,6 +107,18 @@ function createSpan(cls, text) {
 
 // Event Listeners
 refreshBtn.onclick = fetchInitialState;
+
+stateBtn.onclick = () => {
+  chrome.devtools.inspectedWindow.eval("window.state.board.title.value", (result, isException) => {
+    if (!isException) {
+      console.log("Current window.state:", result);
+      alert("Check the console for the current window.state output.");
+    } else {
+      console.error("Eval failed:", isException);
+      alert("Error retrieving window.state. Check console for details.");
+    }
+  });
+}
 
 // Initial Pull
 fetchInitialState();

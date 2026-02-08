@@ -4,7 +4,7 @@
  */
 
 chrome.devtools.panels.create(
-  "microrx",       // Title of the tab
+  "Microrx",       // Title of the tab
   "",        // Path to an icon (optional, can be null)
   "panel.html",        // The page to display inside the tab
   function(panel) {
